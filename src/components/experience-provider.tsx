@@ -24,24 +24,38 @@ const ExperienceContext = createContext<ExperienceContextValue | null>(null);
 
 type AudioEngine = {
   context: AudioContext;
-  element: HTMLAudioElement;
   master: GainNode;
+  bufferPromise: Promise<AudioBuffer>;
+  source: AudioBufferSourceNode | null;
 };
 
 function buildAudioEngine(): AudioEngine {
   const context = new AudioContext();
-  const element = new Audio("/yomsday-clock.mp3");
-  element.loop = true;
-  element.preload = "auto";
-  element.crossOrigin = "anonymous";
-
-  const source = context.createMediaElementSource(element);
   const master = context.createGain();
   master.gain.value = 0.72;
-  source.connect(master);
   master.connect(context.destination);
 
-  return { context, element, master };
+  const bufferPromise = fetch("/yomsday-clock.mp3")
+    .then((response) => {
+      if (!response.ok) throw new Error("No se pudo cargar el audio de YOMSDAY");
+      return response.arrayBuffer();
+    })
+    .then((audioData) => context.decodeAudioData(audioData));
+
+  return { context, master, bufferPromise, source: null };
+}
+
+function startInfiniteLoop(engine: AudioEngine, buffer: AudioBuffer) {
+  if (engine.source) return;
+
+  const source = engine.context.createBufferSource();
+  source.buffer = buffer;
+  source.loop = true;
+  source.loopStart = 0;
+  source.loopEnd = buffer.duration;
+  source.connect(engine.master);
+  source.start(0);
+  engine.source = source;
 }
 
 export function ExperienceProvider({ children }: { children: ReactNode }) {
@@ -58,9 +72,10 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
       await engine.context.resume();
     }
 
+    const buffer = await engine.bufferPromise;
+    startInfiniteLoop(engine, buffer);
     engine.master.gain.cancelScheduledValues(engine.context.currentTime);
     engine.master.gain.setTargetAtTime(0.72, engine.context.currentTime, 0.04);
-    await engine.element.play();
     setSoundEnabled(true);
     setMuted(false);
   }, []);
@@ -107,7 +122,8 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    engine.element.pause();
+    engine.source?.stop();
+    engine.source = null;
 
     const now = engine.context.currentTime;
     const impact = engine.context.createOscillator();
@@ -152,8 +168,7 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
     return () => {
       const engine = engineRef.current;
       if (!engine) return;
-      engine.element.pause();
-      engine.element.src = "";
+      engine.source?.stop();
       void engine.context.close();
     };
   }, []);

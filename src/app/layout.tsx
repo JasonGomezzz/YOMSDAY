@@ -55,6 +55,15 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="es" className={`${montserrat.variable} ${spaceMono.variable}`}>
+      <head>
+        <link
+          rel="preload"
+          href="/yomsday-clock.mp3"
+          as="fetch"
+          type="audio/mpeg"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body>
         <ExperienceProvider>{children}</ExperienceProvider>
       </body>
