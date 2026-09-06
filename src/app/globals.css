@@ -61,7 +61,7 @@ button { font: inherit; }
   object-position: 50% 46%;
   filter: saturate(0.92) contrast(1.06) brightness(0.82);
   transform-origin: 50% 48%;
-  animation: image-pull-back 24s ease-in-out infinite alternate;
+  animation: image-pull-back 20s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
 }
 
 .hero-image-mobile { display: none; }
@@ -558,7 +558,7 @@ button { font: inherit; }
   animation: status-light-breathe 3.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
 }
 
-@keyframes image-pull-back { from { transform: scale(1.075); } to { transform: scale(1); } }
+@keyframes image-pull-back { from { transform: scale(1.14); } to { transform: scale(1); } }
 @keyframes grain {
   0% { transform: translate3d(1%, -2%, 0); }
   25% { transform: translate3d(-2%, 1%, 0); }

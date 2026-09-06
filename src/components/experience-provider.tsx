@@ -62,11 +62,19 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
   const engineRef = useRef<AudioEngine | null>(null);
 
   const startSound = useCallback(async () => {
-    const engine = engineRef.current ?? buildAudioEngine();
+    const currentEngine = engineRef.current;
+    const engine =
+      currentEngine && currentEngine.context.state !== "closed"
+        ? currentEngine
+        : buildAudioEngine();
     engineRef.current = engine;
 
-    if (engine.context.state === "suspended") {
+    if (engine.context.state !== "running") {
       await engine.context.resume();
+    }
+
+    if (engine.context.state !== "running") {
+      throw new Error("El navegador requiere interacción para activar el audio");
     }
 
     const buffer = await engine.bufferPromise;
@@ -89,6 +97,9 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
 
     const engine = engineRef.current;
     const nextMuted = !muted;
+    if (!nextMuted && engine.context.state !== "running") {
+      await engine.context.resume();
+    }
     engine.master.gain.cancelScheduledValues(engine.context.currentTime);
     engine.master.gain.setTargetAtTime(
       nextMuted ? 0.0001 : 0.72,
@@ -97,6 +108,59 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
     );
     setMuted(nextMuted);
   }, [muted, soundEnabled, startSound]);
+
+  useEffect(() => {
+    if (soundEnabled) return;
+
+    const activateSound = () => {
+      void startSound().catch(() => {
+        // If autoplay is denied, keep waiting for a valid visitor gesture.
+      });
+    };
+
+    document.addEventListener("pointerdown", activateSound, {
+      capture: true,
+      passive: true,
+    });
+    document.addEventListener("touchstart", activateSound, {
+      capture: true,
+      passive: true,
+    });
+    document.addEventListener("click", activateSound, true);
+    document.addEventListener("keydown", activateSound, true);
+
+    // Browsers that already trust this domain can begin immediately.
+    activateSound();
+
+    return () => {
+      document.removeEventListener("pointerdown", activateSound, true);
+      document.removeEventListener("touchstart", activateSound, true);
+      document.removeEventListener("click", activateSound, true);
+      document.removeEventListener("keydown", activateSound, true);
+    };
+  }, [soundEnabled, startSound]);
+
+  useEffect(() => {
+    if (!soundEnabled || muted) return;
+
+    const resumeSound = () => {
+      const engine = engineRef.current;
+      if (
+        document.visibilityState === "visible" &&
+        engine?.context.state === "suspended"
+      ) {
+        void engine.context.resume();
+      }
+    };
+
+    document.addEventListener("visibilitychange", resumeSound);
+    window.addEventListener("pageshow", resumeSound);
+
+    return () => {
+      document.removeEventListener("visibilitychange", resumeSound);
+      window.removeEventListener("pageshow", resumeSound);
+    };
+  }, [muted, soundEnabled]);
 
   const playArrival = useCallback(() => {
     const engine = engineRef.current;
@@ -152,6 +216,7 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
       if (!engine) return;
       engine.source?.stop();
       void engine.context.close();
+      engineRef.current = null;
     };
   }, []);
 
