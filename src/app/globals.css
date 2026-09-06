@@ -503,22 +503,36 @@ button { font: inherit; }
   display: block;
   width: 2.7rem;
   height: 2.7rem;
-  color: var(--emerald);
   pointer-events: none;
-  filter: drop-shadow(0 0 12px rgba(168, 255, 106, 0.9));
   transform: translate(-50%, -94%);
-  transform-origin: 50% 100%;
-  animation: map-marker-breathe 3.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
-  will-change: opacity, filter, transform;
+  isolation: isolate;
 }
 
 .map-marker svg {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
   fill: currentColor;
-  stroke: #071007;
   stroke-width: 1.35;
+}
+
+.map-marker .map-marker-mask {
+  z-index: 0;
+  color: #010302;
+  stroke: #010302;
+  filter: drop-shadow(0 0 4px #010302);
+}
+
+.map-marker .map-marker-light {
+  z-index: 1;
+  color: var(--emerald);
+  stroke: #071007;
+  filter: drop-shadow(0 0 12px rgba(168, 255, 106, 0.9));
+  transform-origin: 50% 100%;
+  animation: map-marker-breathe 3.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  will-change: opacity, filter, transform;
 }
 
 .map-caption {
@@ -570,12 +584,12 @@ button { font: inherit; }
   0%, 100% {
     opacity: 1;
     filter: drop-shadow(0 0 12px rgba(168, 255, 106, 0.9));
-    transform: translate(-50%, -94%) scale(1);
+    transform: scale(1);
   }
   50% {
     opacity: 0.22;
     filter: drop-shadow(0 0 2px rgba(168, 255, 106, 0.22));
-    transform: translate(-50%, -94%) scale(0.97);
+    transform: scale(0.97);
   }
 }
 @keyframes shock-flash {

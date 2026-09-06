@@ -89,7 +89,8 @@ export default function LocationPage() {
               allowFullScreen
             />
             <span className="map-marker" aria-hidden="true">
-              <MapPin />
+              <MapPin className="map-marker-mask" />
+              <MapPin className="map-marker-light" />
             </span>
           </div>
           <div className="map-caption">
