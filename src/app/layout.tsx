@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "YOMSDAY IS COMING — Cumpleaños de Yonsito",
+    title: "YOMSDAY IS COMING — Cumpleaños del Yon",
     description:
       "La cuenta regresiva ha comenzado. 26 de septiembre de 2026 a las 10:00 p. m.",
   },
