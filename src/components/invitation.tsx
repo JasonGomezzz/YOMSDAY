@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, MessageCircle, Volume2 } from "lucide-react";
+import { MapPin, MessageCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { AudioToggle } from "@/components/audio-toggle";
 import { Brand } from "@/components/brand";
@@ -30,53 +30,8 @@ const units: ReadonlyArray<{
 
 const targetTimestamp = new Date(eventConfig.targetInstant).getTime();
 
-function ExperienceGate() {
-  const { enter } = useExperience();
-
-  return (
-    <section
-      className="experience-gate"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="gate-title"
-      aria-describedby="gate-copy"
-    >
-      <div className="gate-inner">
-        <div className="gate-orbit" aria-hidden="true">
-          <span>Y</span>
-        </div>
-        <p className="gate-kicker">La cuenta regresiva comenzó</p>
-        <h1 className="gate-title" id="gate-title">
-          YOMSDAY
-        </h1>
-        <p className="gate-copy" id="gate-copy">
-          Activa el sonido para vivir la experiencia completa. Puedes silenciarla
-          cuando quieras.
-        </p>
-        <div className="gate-actions">
-          <button
-            className="gate-button"
-            type="button"
-            onClick={() => void enter(true)}
-          >
-            <Volume2 size={17} aria-hidden="true" />
-            <span>Entrar a YOMSDAY</span>
-          </button>
-          <button
-            className="gate-button secondary"
-            type="button"
-            onClick={() => void enter(false)}
-          >
-            Entrar sin sonido
-          </button>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export function Invitation() {
-  const { entered, playArrival } = useExperience();
+  const { playArrival } = useExperience();
   const [countdown, setCountdown] = useState<CountdownValue | null>(null);
   const [arrivalFlash, setArrivalFlash] = useState(false);
   const arrivalPlayed = useRef(false);
@@ -98,27 +53,42 @@ export function Invitation() {
   }, []);
 
   useEffect(() => {
-    if (!entered || !arrived || arrivalPlayed.current) return;
+    if (!arrived || arrivalPlayed.current) return;
     arrivalPlayed.current = true;
     setArrivalFlash(true);
     playArrival();
     const timer = window.setTimeout(() => setArrivalFlash(false), 1_050);
     return () => window.clearTimeout(timer);
-  }, [arrived, entered, playArrival]);
+  }, [arrived, playArrival]);
 
   return (
     <main
       className={`cinematic-page${arrivalFlash ? " arrival-flash" : ""}`}
     >
       <div className="cinematic-image" aria-hidden="true">
-        <Image src="/yomsday-hero.png" alt="" fill priority sizes="100vw" />
+        <Image
+          className="hero-image-desktop"
+          src="/yomsday-hero.png"
+          alt=""
+          fill
+          priority
+          sizes="(max-width: 760px) 1px, 100vw"
+        />
+        <Image
+          className="hero-image-mobile"
+          src="/yomsday-hero-mobile.png"
+          alt=""
+          fill
+          priority
+          sizes="(max-width: 760px) 100vw, 1px"
+        />
       </div>
       <div className="atmosphere" aria-hidden="true" />
       <div className="scanline" aria-hidden="true" />
 
       <header className="site-header">
         <Brand />
-        {entered ? <AudioToggle /> : <span />}
+        <AudioToggle />
       </header>
 
       <div className="invitation-content">
@@ -174,8 +144,6 @@ export function Invitation() {
           </p>
         </section>
       </div>
-
-      {!entered ? <ExperienceGate /> : null}
     </main>
   );
 }

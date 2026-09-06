@@ -12,10 +12,8 @@ import {
 } from "react";
 
 type ExperienceContextValue = {
-  entered: boolean;
   muted: boolean;
   soundEnabled: boolean;
-  enter: (withSound: boolean) => Promise<void>;
   toggleMute: () => Promise<void>;
   playArrival: () => void;
 };
@@ -59,7 +57,6 @@ function startInfiniteLoop(engine: AudioEngine, buffer: AudioBuffer) {
 }
 
 export function ExperienceProvider({ children }: { children: ReactNode }) {
-  const [entered, setEntered] = useState(false);
   const [muted, setMuted] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(false);
   const engineRef = useRef<AudioEngine | null>(null);
@@ -79,21 +76,6 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
     setSoundEnabled(true);
     setMuted(false);
   }, []);
-
-  const enter = useCallback(
-    async (withSound: boolean) => {
-      setEntered(true);
-      if (!withSound) return;
-
-      try {
-        await startSound();
-      } catch {
-        setSoundEnabled(false);
-        setMuted(true);
-      }
-    },
-    [startSound],
-  );
 
   const toggleMute = useCallback(async () => {
     if (!soundEnabled || !engineRef.current) {
@@ -175,14 +157,12 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo(
     () => ({
-      entered,
       muted,
       soundEnabled,
-      enter,
       toggleMute,
       playArrival,
     }),
-    [entered, muted, soundEnabled, enter, toggleMute, playArrival],
+    [muted, soundEnabled, toggleMute, playArrival],
   );
 
   return (

@@ -14,15 +14,20 @@
 * { box-sizing: border-box; }
 
 html {
+  width: 100%;
   min-height: 100%;
+  overflow-x: hidden;
+  overscroll-behavior: none;
   background: var(--ink);
   scroll-behavior: smooth;
 }
 
 body {
+  width: 100%;
   min-height: 100%;
   margin: 0;
   overflow-x: hidden;
+  overscroll-behavior: none;
   background: var(--ink);
   color: var(--paper);
   font-family: var(--font-sans);
@@ -34,9 +39,14 @@ button { font: inherit; }
 
 .cinematic-page {
   position: relative;
+  width: 100%;
+  max-width: 100vw;
   min-height: 100svh;
+  min-height: 100dvh;
   isolation: isolate;
   overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: pan-y pinch-zoom;
   background: #020504;
 }
 
@@ -52,6 +62,8 @@ button { font: inherit; }
   filter: saturate(0.92) contrast(1.06) brightness(0.82);
   animation: image-breathe 14s ease-in-out infinite alternate;
 }
+
+.hero-image-mobile { display: none; }
 
 .cinematic-page::before {
   position: absolute;
@@ -186,7 +198,6 @@ button { font: inherit; }
 
 .sound-button:focus-visible,
 .action-button:focus-visible,
-.gate-button:focus-visible,
 .back-link:focus-visible {
   outline: 2px solid var(--emerald-bright);
   outline-offset: 4px;
@@ -212,7 +223,6 @@ button { font: inherit; }
 }
 
 .eyebrow,
-.gate-kicker,
 .location-kicker {
   margin: 0 0 0.75rem;
   color: rgba(225, 255, 220, 0.76);
@@ -367,115 +377,14 @@ button { font: inherit; }
   letter-spacing: 0.08em;
 }
 
-.experience-gate {
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  display: grid;
-  place-items: center;
-  padding: 1.25rem;
-  background: radial-gradient(circle at 50% 42%, rgba(62, 144, 57, 0.16), transparent 30%), rgba(1, 5, 3, 0.88);
-  backdrop-filter: blur(10px);
-  animation: gate-in 600ms ease both;
-}
-
-.gate-inner {
-  display: flex;
-  width: min(100%, 34rem);
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.gate-orbit {
-  position: relative;
-  display: grid;
-  width: 7.5rem;
-  height: 7.5rem;
-  margin-bottom: 2rem;
-  place-items: center;
-  border: 1px solid rgba(183, 255, 142, 0.24);
-  border-radius: 50%;
-  box-shadow: 0 0 70px rgba(117, 255, 71, 0.12), inset 0 0 30px rgba(104, 255, 71, 0.06);
-  animation: orbit 14s linear infinite;
-}
-
-.gate-orbit::before,
-.gate-orbit::after {
-  position: absolute;
-  border: 1px solid rgba(183, 255, 142, 0.22);
-  border-radius: 50%;
-  content: "";
-}
-
-.gate-orbit::before { inset: 0.8rem; }
-.gate-orbit::after {
-  inset: 2rem;
-  border-color: var(--emerald);
-  box-shadow: 0 0 24px rgba(144, 255, 88, 0.22);
-}
-
-.gate-orbit span {
-  color: #d5ffbd;
-  font-family: var(--font-mono);
-  font-size: 1.1rem;
-  font-weight: 700;
-  animation: orbit-reverse 14s linear infinite;
-}
-
-.gate-kicker,
-.location-kicker { color: var(--emerald); font-size: 0.62rem; }
-
-.gate-title {
-  margin: 0;
-  font-size: clamp(2.2rem, 9vw, 4.9rem);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  line-height: 0.92;
-  text-transform: uppercase;
-}
-
-.gate-copy {
-  max-width: 28rem;
-  margin: 1.25rem 0 1.7rem;
-  color: rgba(225, 239, 227, 0.7);
-  font-size: 0.82rem;
-  line-height: 1.7;
-}
-
-.gate-actions {
-  display: flex;
-  width: min(100%, 26rem);
-  flex-direction: column;
-  gap: 0.7rem;
-}
-
-.gate-button {
-  display: inline-flex;
-  min-height: 3.4rem;
-  align-items: center;
-  justify-content: center;
-  gap: 0.55rem;
-  border: 1px solid var(--emerald);
-  padding: 0.9rem 1.25rem;
-  background: var(--emerald);
-  color: #061006;
-  cursor: pointer;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  transition: background 180ms ease, color 180ms ease, box-shadow 180ms ease;
-}
-
-.gate-button:hover { background: var(--emerald-bright); box-shadow: 0 0 35px rgba(151, 255, 93, 0.2); }
-.gate-button.secondary { border-color: transparent; background: transparent; color: rgba(239, 250, 240, 0.65); }
-.gate-button.secondary:hover { color: #fff; box-shadow: none; }
-
 .arrival-flash::before { z-index: 20; animation: shock-flash 900ms steps(2) both; }
 .arrival-flash .invitation-copy { animation: screen-glitch 820ms steps(2) both; }
 
-.location-page { min-height: 100svh; overflow: auto; }
+.location-page {
+  min-height: 100svh;
+  min-height: 100dvh;
+  overflow: hidden;
+}
 .location-page .cinematic-image img {
   object-position: 50% 50%;
   filter: saturate(0.55) brightness(0.33) blur(2px);
@@ -609,9 +518,6 @@ button { font: inherit; }
 }
 @keyframes fog-drift { from { transform: translate3d(-8%, 0, 0) scale(0.9); } to { transform: translate3d(20%, -10%, 0) scale(1.15); } }
 @keyframes content-rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes gate-in { from { opacity: 0; } to { opacity: 1; } }
-@keyframes orbit { to { transform: rotate(360deg); } }
-@keyframes orbit-reverse { to { transform: rotate(-360deg); } }
 @keyframes dot-pulse { 50% { opacity: 0.35; transform: scale(0.7); } }
 @keyframes shock-flash {
   0% { background: rgba(210, 255, 186, 0.9); }
@@ -630,7 +536,11 @@ button { font: inherit; }
 @keyframes arrival-reveal { from { opacity: 0; transform: scale(0.9); letter-spacing: 0.2em; } to { opacity: 1; transform: scale(1); letter-spacing: 0.09em; } }
 
 @media (max-width: 760px) {
-  .cinematic-image img { object-position: 62% 50%; }
+  .hero-image-desktop { display: none; }
+  .cinematic-image img.hero-image-mobile {
+    display: block;
+    object-position: 50% 50%;
+  }
   .cinematic-page::before {
     background: linear-gradient(180deg, rgba(0, 4, 2, 0.7) 0%, transparent 22%, rgba(0, 4, 2, 0.3) 43%, rgba(0, 4, 2, 0.98) 76%), radial-gradient(circle at 60% 34%, transparent 0%, rgba(0, 3, 2, 0.82) 88%);
   }
@@ -643,13 +553,21 @@ button { font: inherit; }
   .time-unit { padding-inline: 0.18rem; }
   .time-value { letter-spacing: -0.02em; }
   .time-label { letter-spacing: 0.04em; }
-  .action-row { width: 100%; gap: 0.6rem; }
+  .action-row {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.6rem;
+  }
   .action-button {
-    flex: 1 1 11rem;
+    width: 100%;
+    min-width: 0;
     min-height: 2.85rem;
-    padding: 0.78rem 0.85rem;
+    padding: 0.7rem 0.55rem;
     font-size: 0.59rem;
     letter-spacing: 0.11em;
+    line-height: 1.35;
+    text-align: center;
   }
   .location-note { max-width: 28rem; line-height: 1.5; }
   .location-shell {
@@ -662,7 +580,7 @@ button { font: inherit; }
     padding: 6.5rem 1.1rem 2rem;
   }
   .location-title { max-width: 12ch; }
-  .location-actions .action-button { width: 100%; flex-basis: 100%; }
+  .location-actions { grid-template-columns: 1fr; }
   .map-caption { font-size: 0.52rem; }
 }
 

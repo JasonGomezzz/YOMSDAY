@@ -17,7 +17,22 @@ export default function LocationPage() {
   return (
     <main className="cinematic-page location-page">
       <div className="cinematic-image" aria-hidden="true">
-        <Image src="/yomsday-hero.png" alt="" fill priority sizes="100vw" />
+        <Image
+          className="hero-image-desktop"
+          src="/yomsday-hero.png"
+          alt=""
+          fill
+          priority
+          sizes="(max-width: 760px) 1px, 100vw"
+        />
+        <Image
+          className="hero-image-mobile"
+          src="/yomsday-hero-mobile.png"
+          alt=""
+          fill
+          priority
+          sizes="(max-width: 760px) 100vw, 1px"
+        />
       </div>
       <div className="atmosphere" aria-hidden="true" />
       <div className="scanline" aria-hidden="true" />

@@ -20,7 +20,7 @@ export type EventConfig = {
 };
 
 const rsvpMessage =
-  "Hola, confirmo mi asistencia al cumpleaños de Yonsito 🎉. Mi nombre es: _____.";
+  "GO";
 
 export const eventConfig = {
   headline: "YOMSDAY IS COMING",
