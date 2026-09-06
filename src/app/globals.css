@@ -505,10 +505,11 @@ button { font: inherit; }
   height: 2.7rem;
   color: var(--emerald);
   pointer-events: none;
-  filter: drop-shadow(0 0 8px rgba(168, 255, 106, 0.82));
+  filter: drop-shadow(0 0 12px rgba(168, 255, 106, 0.9));
   transform: translate(-50%, -94%);
   transform-origin: 50% 100%;
-  animation: map-marker-pulse 1.8s ease-in-out infinite;
+  animation: map-marker-breathe 3.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  will-change: opacity, filter, transform;
 }
 
 .map-marker svg {
@@ -540,7 +541,7 @@ button { font: inherit; }
   border-radius: 50%;
   background: var(--emerald);
   box-shadow: 0 0 10px var(--emerald);
-  animation: dot-pulse 1.8s ease-in-out infinite;
+  animation: status-light-breathe 3.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
 }
 
 @keyframes image-pull-back { from { transform: scale(1.075); } to { transform: scale(1); } }
@@ -553,12 +554,28 @@ button { font: inherit; }
 }
 @keyframes fog-drift { from { transform: translate3d(-8%, 0, 0) scale(0.9); } to { transform: translate3d(20%, -10%, 0) scale(1.15); } }
 @keyframes content-rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes dot-pulse { 50% { opacity: 0.35; transform: scale(0.7); } }
-@keyframes map-marker-pulse {
+@keyframes status-light-breathe {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 10px var(--emerald);
+    transform: scale(1);
+  }
   50% {
-    color: var(--emerald-bright);
-    filter: drop-shadow(0 0 17px rgba(168, 255, 106, 1));
-    transform: translate(-50%, -94%) scale(1.08);
+    opacity: 0.2;
+    box-shadow: 0 0 2px rgba(168, 255, 106, 0.24);
+    transform: scale(0.82);
+  }
+}
+@keyframes map-marker-breathe {
+  0%, 100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 12px rgba(168, 255, 106, 0.9));
+    transform: translate(-50%, -94%) scale(1);
+  }
+  50% {
+    opacity: 0.22;
+    filter: drop-shadow(0 0 2px rgba(168, 255, 106, 0.22));
+    transform: translate(-50%, -94%) scale(0.97);
   }
 }
 @keyframes shock-flash {
