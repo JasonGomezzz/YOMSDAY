@@ -60,7 +60,8 @@ button { font: inherit; }
   object-fit: cover;
   object-position: 50% 46%;
   filter: saturate(0.92) contrast(1.06) brightness(0.82);
-  animation: image-breathe 14s ease-in-out infinite alternate;
+  transform-origin: 50% 48%;
+  animation: image-pull-back 24s ease-in-out infinite alternate;
 }
 
 .hero-image-mobile { display: none; }
@@ -159,6 +160,8 @@ button { font: inherit; }
   color: var(--emerald-bright);
   font-family: var(--font-mono);
   font-size: 0.7rem;
+  letter-spacing: 0;
+  line-height: 1;
   box-shadow: 0 0 30px rgba(137, 255, 93, 0.18), inset 0 0 16px rgba(137, 255, 93, 0.1);
 }
 
@@ -477,12 +480,44 @@ button { font: inherit; }
   background: linear-gradient(90deg, transparent, var(--emerald), transparent);
 }
 
+.map-viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
 .map-frame {
   display: block;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  height: 100%;
   border: 0;
   filter: grayscale(0.5) invert(0.9) hue-rotate(82deg) saturate(1.2) brightness(0.82) contrast(1.06);
+}
+
+.map-marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  display: block;
+  width: 2.7rem;
+  height: 2.7rem;
+  color: var(--emerald);
+  pointer-events: none;
+  filter: drop-shadow(0 0 8px rgba(168, 255, 106, 0.82));
+  transform: translate(-50%, -94%);
+  transform-origin: 50% 100%;
+  animation: map-marker-pulse 1.8s ease-in-out infinite;
+}
+
+.map-marker svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+  stroke: #071007;
+  stroke-width: 1.35;
 }
 
 .map-caption {
@@ -508,7 +543,7 @@ button { font: inherit; }
   animation: dot-pulse 1.8s ease-in-out infinite;
 }
 
-@keyframes image-breathe { from { transform: scale(1); } to { transform: scale(1.035); } }
+@keyframes image-pull-back { from { transform: scale(1.075); } to { transform: scale(1); } }
 @keyframes grain {
   0% { transform: translate3d(1%, -2%, 0); }
   25% { transform: translate3d(-2%, 1%, 0); }
@@ -519,6 +554,13 @@ button { font: inherit; }
 @keyframes fog-drift { from { transform: translate3d(-8%, 0, 0) scale(0.9); } to { transform: translate3d(20%, -10%, 0) scale(1.15); } }
 @keyframes content-rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes dot-pulse { 50% { opacity: 0.35; transform: scale(0.7); } }
+@keyframes map-marker-pulse {
+  50% {
+    color: var(--emerald-bright);
+    filter: drop-shadow(0 0 17px rgba(168, 255, 106, 1));
+    transform: translate(-50%, -94%) scale(1.08);
+  }
+}
 @keyframes shock-flash {
   0% { background: rgba(210, 255, 186, 0.9); }
   18% { background: rgba(0, 0, 0, 0.95); }

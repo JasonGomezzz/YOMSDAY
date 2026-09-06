@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ExternalLink, MessageCircle } from "lucide-react";
+import { ArrowLeft, ExternalLink, MapPin, MessageCircle } from "lucide-react";
 import { AudioToggle } from "@/components/audio-toggle";
 import { Brand } from "@/components/brand";
 import { eventConfig } from "@/config/event";
@@ -19,7 +19,7 @@ export default function LocationPage() {
       <div className="cinematic-image" aria-hidden="true">
         <Image
           className="hero-image-desktop"
-          src="/yomsday-hero.png"
+          src="/yomsday-grid-desktop.png"
           alt=""
           fill
           priority
@@ -27,7 +27,7 @@ export default function LocationPage() {
         />
         <Image
           className="hero-image-mobile"
-          src="/yomsday-hero-mobile.png"
+          src="/yomsday-grid-mobile.png"
           alt=""
           fill
           priority
@@ -79,14 +79,19 @@ export default function LocationPage() {
         </section>
 
         <section className="map-card" aria-label="Mapa del lugar">
-          <iframe
-            className="map-frame"
-            src={eventConfig.location.embedUrl}
-            title="Ubicación de YOMSDAY en Cruz de Motupe"
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            allowFullScreen
-          />
+          <div className="map-viewport">
+            <iframe
+              className="map-frame"
+              src={eventConfig.location.embedUrl}
+              title="Ubicación de YOMSDAY en Cruz de Motupe"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
+            />
+            <span className="map-marker" aria-hidden="true">
+              <MapPin />
+            </span>
+          </div>
           <div className="map-caption">
             <span>
               <span className="status-dot" aria-hidden="true" />

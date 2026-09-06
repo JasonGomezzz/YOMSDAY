@@ -68,7 +68,7 @@ export function Invitation() {
       <div className="cinematic-image" aria-hidden="true">
         <Image
           className="hero-image-desktop"
-          src="/yomsday-hero.png"
+          src="/yomsday-grid-desktop.png"
           alt=""
           fill
           priority
@@ -76,7 +76,7 @@ export function Invitation() {
         />
         <Image
           className="hero-image-mobile"
-          src="/yomsday-hero-mobile.png"
+          src="/yomsday-grid-mobile.png"
           alt=""
           fill
           priority
